@@ -16,6 +16,7 @@ browser_exec()
 			BROWSER_CODE='chromium-browser --no-sandbox $STARTUP_WEBSITE'
 		else
 			BROWSER_CODE='chromium- --no-sandbox $STARTUP_WEBSITE'
+		fi
 	elif [[ "$STARTUP_BROWSER" == "firefox" ]]; then
 		BROWSER_CODE='firefox $STARTUP_WEBSITE'
 	else
@@ -49,9 +50,9 @@ install_extra_packages()
 		chmod +x /home/firefox.desktop;
 	elif [[ "$OS_ID" == "centos" ]]; then
 		sudo yum -y install wget chromium browser-plugin-freshplayer-pepperflash firefox bind-utils;
-		wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -O /tmp/google-chrome-stable_current_amd64.deb;
-		sudo dpkg -i /tmp/google-chrome-stable_current_amd64.deb;sudo apt-get -y install -f; #installing chrome
-		rm /tmp/google-chrome-stable_current_amd64.deb;
+		wget -P $PWD https://dl.google.com/linux/direct/google-chrome-stable_current_x86_64.rpm
+		yum -y install $PWD/google-chrome-stable_current_x86_64.rpm
+		rm -f $PWD/google-chrome-stable_current_x86_64.rpm		
 		sudo chmod -R a=rwx /home/;
 		echo -e "[Desktop Entry]\nName=chrome\nExec=google-chrome --no-sandbox www.gmail.com\nType=Application" >> /home/chrome.desktop
 		echo -e "[Desktop Entry]\nName=chromium\nExec=chromium-browser www.gmail.com\nType=Application" >> /home/chromium.desktop
