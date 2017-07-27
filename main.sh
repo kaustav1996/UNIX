@@ -11,10 +11,13 @@ browser_exec()
 {
 	if [[ "$STARTUP_BROWSER" == "chrome" ]]; then
 		BROWSER_CODE=google-chrome --no-sandbox $STARTUP_WEBSITE
-	if [[ "$STARTUP_BROWSER" == "chromium" ]]; then
+	elif [[ "$STARTUP_BROWSER" == "chromium" ]]; then
 		BROWSER_CODE=chromium-browser --no-sandbox $STARTUP_WEBSITE
-	if [[ "$STARTUP_BROWSER" == "firefox" ]]; then
+	elif [[ "$STARTUP_BROWSER" == "firefox" ]]; then
 		BROWSER_CODE=firefox $STARTUP_WEBSITE
+	else
+		echo "ERROR!! BROWSER NOT AVAILABLE!!"
+	fi
 }
 detect_os()
 {
@@ -41,7 +44,7 @@ install_extra_packages()
 		chmod +x /home/chromium.desktop;
 		chmod +x /home/chrome.desktop;
 		chmod +x /home/firefox.desktop;
-	if [[ "$OS" == "CentOS Linux" ]]; then
+	elif [[ "$OS" == "CentOS Linux" ]]; then
 		sudo yum -y install wget chromium-browser browser-plugin-freshplayer-pepperflash firefox ;
 		wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -O /tmp/google-chrome-stable_current_amd64.deb;
 		sudo dpkg -i /tmp/google-chrome-stable_current_amd64.deb;sudo apt-get -y install -f; #installing chrome
@@ -55,6 +58,9 @@ install_extra_packages()
 		chmod +x /home/chromium.desktop;
 		chmod +x /home/chrome.desktop;
 		chmod +x /home/firefox.desktop;
+	else
+		echo "ERROR OS NOT SUPPORTED YET!!"
+	fi
 }
 machine_info()
 {
@@ -108,6 +114,9 @@ install_desktop()
 			sudo sed -i.bak '/x-terminal-emulator/c startxfce4 & \n' ~/.vnc/xstartup;
 			sudo vncserver -kill :1;
 			sudo vncserver -geometry 1600x900 -depth 24;
+	else
+		echo "ERROR OS NOT SUPPORTED YET!!"
+	fi
 		
 }
 echo "###################################################################"
