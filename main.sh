@@ -65,25 +65,25 @@ machine_info()
 startup_settings()
 {
 	browser_exec()
-{
-	if [[ "$STARTUP_BROWSER" == "chrome" ]]; then
-		echo -e "[Desktop Entry]\nName=Chrome_autostart\nExec=google-chrome --no-sandbox www.gmail.com\nType=Application" >>/etc/xdg/autostart/chrome.desktop; #chrome would start at start up
-		sudo chmod +x /etc/xdg/autostart/chrome.desktop;
-	elif [[ "$STARTUP_BROWSER" == "chromium" ]]; then
-		if [[ "$OS_ID" == "Ubuntu" ]]; then
-			echo -e "[Desktop Entry]\nName=Chromium_autostart\nExec=chromium-browser --no-sandbox www.gmail.com\nType=Application" >>/etc/xdg/autostart/chromium.desktop; #chrome would start at start up
-			sudo chmod +x /etc/xdg/autostart/chromium.desktop;
+	{
+		if [[ "$STARTUP_BROWSER" == "chrome" ]]; then
+			echo -e "[Desktop Entry]\nName=Chrome_autostart\nExec=google-chrome --no-sandbox www.gmail.com\nType=Application" >>/etc/xdg/autostart/chrome.desktop; #chrome would start at start up
+			sudo chmod +x /etc/xdg/autostart/chrome.desktop;
+		elif [[ "$STARTUP_BROWSER" == "chromium" ]]; then
+			if [[ "$OS_ID" == "Ubuntu" ]]; then
+				echo -e "[Desktop Entry]\nName=Chromium_autostart\nExec=chromium-browser --no-sandbox www.gmail.com\nType=Application" >>/etc/xdg/autostart/chromium.desktop; #chrome would start at start up
+				sudo chmod +x /etc/xdg/autostart/chromium.desktop;
+			else
+				echo -e "[Desktop Entry]\nName=Chromium_autostart\nExec=chromium-browser --no-sandbox www.gmail.com\nType=Application" >>/etc/xdg/autostart/chromium.desktop; #chrome would start at start up
+				sudo chmod +x /etc/xdg/autostart/chromium.desktop;
+			fi
+		elif [[ "$STARTUP_BROWSER" == "firefox" ]]; then
+			echo -e "[Desktop Entry]\nName=Firefox_autostart\nExec=firefox www.gmail.com\nType=Application" >>/etc/xdg/autostart/fox.desktop; #chrome would start at start up
+			sudo chmod +x /etc/xdg/autostart/fox.desktop;
 		else
-			echo -e "[Desktop Entry]\nName=Chromium_autostart\nExec=chromium-browser --no-sandbox www.gmail.com\nType=Application" >>/etc/xdg/autostart/chromium.desktop; #chrome would start at start up
-			sudo chmod +x /etc/xdg/autostart/chromium.desktop;
+			echo "ERROR!! BROWSER NOT AVAILABLE!!"
 		fi
-	elif [[ "$STARTUP_BROWSER" == "firefox" ]]; then
-		echo -e "[Desktop Entry]\nName=Firefox_autostart\nExec=firefox www.gmail.com\nType=Application" >>/etc/xdg/autostart/fox.desktop; #chrome would start at start up
-		sudo chmod +x /etc/xdg/autostart/fox.desktop;
-	else
-		echo "ERROR!! BROWSER NOT AVAILABLE!!"
-	fi
-}
+	}
 	sudo chmod -R a=rwx /etc/xdg/autostart/ ; #granting permission to edit autostart
 	echo -e "[Desktop Entry]\nName=Terminal_autostart\nExec=xterm\nType=Application" >>/etc/xdg/autostart/term.desktop; #terminal would start at start up
 	sudo chmod +x /etc/xdg/autostart/term.desktop;
