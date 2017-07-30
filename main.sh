@@ -18,7 +18,11 @@ install_extra_packages()
 {
 	if [[ "$OS_ID" == "Ubuntu" ]]; then
 		sudo apt-get update;
-		sudo apt-get -y install chromium-browser firefox browser-plugin-freshplayer-pepperflash ;
+		if [[ "$OS_VERSION" == "14.04" ]]; then
+			sudo apt-get -y install chromium-browser firefox ;
+		else
+			sudo apt-get -y install chromium-browser firefox browser-plugin-freshplayer-pepperflash ;
+		fi
 		wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -O /tmp/google-chrome-stable_current_amd64.deb;
 		sudo dpkg -i /tmp/google-chrome-stable_current_amd64.deb;sudo apt-get -y install -f; #installing chrome
 		rm /tmp/google-chrome-stable_current_amd64.deb;
