@@ -5,26 +5,6 @@ OS_ID='Ubuntu' #default os name
 OS_VERSION='17.04' #default os version
 OS_NAME='$OS_ID $OSVERSION'
 STARTUP_BROWSER='chrome' #default browser
-browser_exec()
-{
-	if [[ "$STARTUP_BROWSER" == "chrome" ]]; then
-		echo -e "[Desktop Entry]\nName=Chrome_autostart\nExec=google-chrome --no-sandbox www.gmail.com\nType=Application" >>/etc/xdg/autostart/chrome.desktop; #chrome would start at start up
-		sudo chmod +x /etc/xdg/autostart/chrome.desktop;
-	elif [[ "$STARTUP_BROWSER" == "chromium" ]]; then
-		if [[ "$OS_ID" == "Ubuntu" ]]; then
-			echo -e "[Desktop Entry]\nName=Chromium_autostart\nExec=chromium-browser --no-sandbox www.gmail.com\nType=Application" >>/etc/xdg/autostart/chromium.desktop; #chrome would start at start up
-			sudo chmod +x /etc/xdg/autostart/chromium.desktop;
-		else
-			echo -e "[Desktop Entry]\nName=Chromium_autostart\nExec=chromium-browser --no-sandbox www.gmail.com\nType=Application" >>/etc/xdg/autostart/chromium.desktop; #chrome would start at start up
-			sudo chmod +x /etc/xdg/autostart/chromium.desktop;
-		fi
-	elif [[ "$STARTUP_BROWSER" == "firefox" ]]; then
-		echo -e "[Desktop Entry]\nName=Firefox_autostart\nExec=firefox www.gmail.com\nType=Application" >>/etc/xdg/autostart/fox.desktop; #chrome would start at start up
-		sudo chmod +x /etc/xdg/autostart/fox.desktop;
-	else
-		echo "ERROR!! BROWSER NOT AVAILABLE!!"
-	fi
-}
 detect_os()
 {
 	OS_ID=$(python -c 'import platform ; print platform.dist()[0]')
@@ -84,6 +64,26 @@ machine_info()
 }
 startup_settings()
 {
+	browser_exec()
+{
+	if [[ "$STARTUP_BROWSER" == "chrome" ]]; then
+		echo -e "[Desktop Entry]\nName=Chrome_autostart\nExec=google-chrome --no-sandbox www.gmail.com\nType=Application" >>/etc/xdg/autostart/chrome.desktop; #chrome would start at start up
+		sudo chmod +x /etc/xdg/autostart/chrome.desktop;
+	elif [[ "$STARTUP_BROWSER" == "chromium" ]]; then
+		if [[ "$OS_ID" == "Ubuntu" ]]; then
+			echo -e "[Desktop Entry]\nName=Chromium_autostart\nExec=chromium-browser --no-sandbox www.gmail.com\nType=Application" >>/etc/xdg/autostart/chromium.desktop; #chrome would start at start up
+			sudo chmod +x /etc/xdg/autostart/chromium.desktop;
+		else
+			echo -e "[Desktop Entry]\nName=Chromium_autostart\nExec=chromium-browser --no-sandbox www.gmail.com\nType=Application" >>/etc/xdg/autostart/chromium.desktop; #chrome would start at start up
+			sudo chmod +x /etc/xdg/autostart/chromium.desktop;
+		fi
+	elif [[ "$STARTUP_BROWSER" == "firefox" ]]; then
+		echo -e "[Desktop Entry]\nName=Firefox_autostart\nExec=firefox www.gmail.com\nType=Application" >>/etc/xdg/autostart/fox.desktop; #chrome would start at start up
+		sudo chmod +x /etc/xdg/autostart/fox.desktop;
+	else
+		echo "ERROR!! BROWSER NOT AVAILABLE!!"
+	fi
+}
 	sudo chmod -R a=rwx /etc/xdg/autostart/ ; #granting permission to edit autostart
 	echo -e "[Desktop Entry]\nName=Terminal_autostart\nExec=xterm\nType=Application" >>/etc/xdg/autostart/term.desktop; #terminal would start at start up
 	sudo chmod +x /etc/xdg/autostart/term.desktop;
@@ -100,7 +100,7 @@ install_desktop()
 		else
 			sudo apt-get -y install vnc4server autocutsel;
 			sudo apt-get -y install xfce4 xfce4-goodies;
-			echo -e "12345678\n12345678" | sudo vncserver -geometry 1600x900 -depth 24; 
+			echo -e "$P\n$P" | sudo vncserver -geometry 1600x900 -depth 24; 
 			sudo sed -i.bak '/x-terminal-emulator/c startxfce4 & \n' ~/.vnc/xstartup;
 			sudo vncserver -kill :1;
 			sudo vncserver -geometry 1600x900 -depth 24;
@@ -135,7 +135,7 @@ restart_service()
 }
 echo "###################################################################"
 read -p "Enter Username(type-> root , if u want to enter desktop as root) >> " U
-read -p "Enter Password >> " P
+read -p "Enter Password(use atleast 8 characters/numbers) >> " P #as this password will be also used for vncserver if chosen
 echo -e "$P\n$P" | sudo passwd $U
 detect_os
 read -p "What server do you want to install? (xrdp/vnc) >> " SERVER
@@ -146,4 +146,3 @@ startup_settings
 restart_service
 machine_info
 echo "###################################################################"
-
