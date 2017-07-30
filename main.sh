@@ -38,7 +38,7 @@ install_extra_packages()
 	elif [[ "$OS_ID" == "centos" ]]; then
 		sudo yum -y install wget chromium firefox browser-plugin-freshplayer-pepperflash firefox bind-utils;
 		wget -P $PWD https://dl.google.com/linux/direct/google-chrome-stable_current_x86_64.rpm
-		yum -y install $PWD/google-chrome-stable_current_x86_64.rpm
+		sudo yum -y install $PWD/google-chrome-stable_current_x86_64.rpm
 		rm -f $PWD/google-chrome-stable_current_x86_64.rpm		
 		sudo chmod -R a=rwx /home/;
 		echo -e "[Desktop Entry]\nName=chrome\nExec=google-chrome --no-sandbox www.gmail.com\nType=Application" >> /home/chrome.desktop
@@ -119,10 +119,11 @@ install_desktop()
 		fi
 	elif [[ "$OS_ID" == "centos" ]]; then
 		if [[ "$SERVER" == "xrdp" ]]; then
-		
-			sudo yum -y install xrdp xfce4 xfce4-goodies;
-			echo xfce4-session >~/.xsession;
-			sudo sed -i.bak '/fi/a #edit \n startxfce4 \n' /etc/xrdp/startwm.sh;
+			sudo rpm -Uvh http://download.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
+			sudo yum -y install xrdp
+			sudo yum -y groupinstall Xfce
+			sudo yum -y install xorg-x11-fonts-Type1 xorg-x11-fonts-misc
+
 		else
 			sudo yum -y install vnc4server autocutsel;
 			sudo yum -y install xfce4 xfce4-goodies;
