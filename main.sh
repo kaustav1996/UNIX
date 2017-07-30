@@ -17,7 +17,8 @@ detect_os()
 install_extra_packages()
 {
 	if [[ "$OS_ID" == "Ubuntu" ]]; then
-		sudo apt-get -y install chromium-browser browser-plugin-freshplayer-pepperflash firefox;
+		sudo apt-get update;
+		sudo apt-get -y install chromium-browser firefox browser-plugin-freshplayer-pepperflash ;
 		wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -O /tmp/google-chrome-stable_current_amd64.deb;
 		sudo dpkg -i /tmp/google-chrome-stable_current_amd64.deb;sudo apt-get -y install -f; #installing chrome
 		rm /tmp/google-chrome-stable_current_amd64.deb;
@@ -31,7 +32,7 @@ install_extra_packages()
 		chmod +x /home/chrome.desktop;
 		chmod +x /home/firefox.desktop;
 	elif [[ "$OS_ID" == "centos" ]]; then
-		sudo yum -y install wget chromium browser-plugin-freshplayer-pepperflash firefox bind-utils;
+		sudo yum -y install wget chromium firefox browser-plugin-freshplayer-pepperflash firefox bind-utils;
 		wget -P $PWD https://dl.google.com/linux/direct/google-chrome-stable_current_x86_64.rpm
 		yum -y install $PWD/google-chrome-stable_current_x86_64.rpm
 		rm -f $PWD/google-chrome-stable_current_x86_64.rpm		
@@ -91,12 +92,17 @@ startup_settings()
 }
 install_desktop()
 {
-	if [[ "$OS_ID" == "Ubuntu" ]]; then
+	if [[ "$OS_ID" == "Ubuntu"]]; then
 		if [[ "$SERVER" == "xrdp" ]]; then
-		
+			sudo apt-get update;
 			sudo apt-get -y install xrdp xfce4 xfce4-goodies;
 			echo xfce4-session >~/.xsession;
 			sudo sed -i.bak '/fi/a #edit \n startxfce4 \n' /etc/xrdp/startwm.sh;
+			if [[ "$OS_VERSION" == "16.04"]]; then
+				sudo cp .xsession /etc/skel/
+				sudo sed -i.bak '/port/c port=ask-1' /etc/xrdp/startwm.sh;
+
+			fi
 		else
 			sudo apt-get -y install vnc4server autocutsel;
 			sudo apt-get -y install xfce4 xfce4-goodies;
