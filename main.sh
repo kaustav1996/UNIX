@@ -19,7 +19,7 @@ install_extra_packages()
 	if [[ "$OS_ID" == "Ubuntu" ]]; then
 		sudo apt-get update;
 		if [[ "$OS_VERSION" == "14.04" ]]; then
-			sudo apt-get -y install chromium-browser firefox ;
+			sudo apt-get -y install chromium-browser firefox flashplugin-installer;
 		else
 			sudo apt-get -y install chromium-browser firefox browser-plugin-freshplayer-pepperflash ;
 		fi
