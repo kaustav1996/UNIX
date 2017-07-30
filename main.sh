@@ -101,7 +101,9 @@ install_desktop()
 			if [[ "$OS_VERSION" == "16.04" ]]; then
 				sudo cp .xsession /etc/skel/;
 				sudo sed -i.bak '/port/c port=ask-1' /etc/xrdp/xrdp.ini;
-
+			elif [[ "$OS_VERSION" == "14.04" ]]; then
+				sudo cp .xsession /etc/skel/;
+				sudo sed -i.bak '/port/c port=ask-1' /etc/xrdp/xrdp.ini;
 			fi
 		else
 			sudo apt-get -y install vnc4server autocutsel;
