@@ -98,7 +98,7 @@ install_desktop()
 			sudo apt-get -y install xrdp xfce4 xfce4-goodies;
 			echo xfce4-session >~/.xsession;
 			sudo sed -i.bak '/fi/a #edit \n startxfce4 \n' /etc/xrdp/startwm.sh;
-			if [[ "$OS_VERSION" == "16.04"]]; then
+			if [[ "$OS_VERSION" == "16.04" ]]; then
 				sudo cp .xsession /etc/skel/;
 				sudo sed -i.bak '/port/c port=ask-1' /etc/xrdp/xrdp.ini;
 
