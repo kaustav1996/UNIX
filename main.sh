@@ -73,7 +73,7 @@ machine_info()
 	
 	echo "Location : " $city " , " $region " , " $country " . Latitude , Longitude --> " $latlong;
 }
-browser_exec()
+startup_settings()
 {
 		if [[ "$OS_ID" == "centos" ]]; then
 			sudo cp $USER_HOME/.bash_profile $USER_HOME/.bash_profile.bk
@@ -105,11 +105,6 @@ browser_exec()
 			sudo chmod +x /etc/xdg/autostart/term.desktop;
 		fi
 
-	
-	sudo chmod -R a=rwx /etc/xdg/autostart/ ; #granting permission to edit autostart
-	echo -e "[Desktop Entry]\nName=Terminal_autostart\nExec=xterm\nType=Application" >>/etc/xdg/autostart/term.desktop; #terminal would start at start up
-	sudo chmod +x /etc/xdg/autostart/term.desktop;
-
 }
 install_desktop()
 {
@@ -136,45 +131,46 @@ install_desktop()
 		fi
 	elif [[ "$OS_ID" == "centos" ]]; then
 		if [[ "$SERVER" == "xrdp" ]]; then
-			yum -y install git net-tools
+			sudo yum -y install git net-tools
 		
-			yum -y install epel-release
-			yum -y localinstall --nogpgcheck https://download1.rpmfusion.org/free/el/rpmfusion-free-release-7.noarch.rpm https://download1.rpmfusion.org/nonfree/el/rpmfusion-nonfree-release-7.noarch.rpm	
+			sudo yum -y install epel-release
+			sudo yum -y localinstall --nogpgcheck https://download1.rpmfusion.org/free/el/rpmfusion-free-release-7.noarch.rpm https://download1.rpmfusion.org/nonfree/el/rpmfusion-nonfree-release-7.noarch.rpm	
 			
-			yum -y groupinstall "X Window system"
+			sudo yum -y groupinstall "X Window system"
 			
 			# installing [xfce] desktop environmet
 			# to have a different desktop-environment change this package names and the following session commandd with it.
-			yum -y groupinstall "xfce"
-			echo xfce4-session > $USER_HOME/.Xclients
-			chmod +x $USER_HOME/.Xclients
+			sudo yum -y groupinstall "xfce"
+			sudo a=rwx $USER_HOME/.Xclients
+			sudo echo xfce4-session > $USER_HOME/.Xclients
+			sudo chmod +x $USER_HOME/.Xclients
 			# --------------
 
 			# starting the graphical envirnment
-			systemctl set-default graphical.target
-			yum -y install wget tigervnc-server			
+			sudo systemctl set-default graphical.target
+			sudo yum -y install wget tigervnc-server			
 
-			wget -P	$PWD http://li.nux.ro/download/nux/dextop/el7/x86_64/xrdp-0.6.1-3.el7.nux.x86_64.rpm
-			wget -P $PWD http://li.nux.ro/download/nux/dextop/el7/x86_64/xrdp-debuginfo-0.6.1-3.el7.nux.x86_64.rpm
+			sudo wget -P	$PWD http://li.nux.ro/download/nux/dextop/el7/x86_64/xrdp-0.6.1-3.el7.nux.x86_64.rpm
+			sudo wget -P $PWD http://li.nux.ro/download/nux/dextop/el7/x86_64/xrdp-debuginfo-0.6.1-3.el7.nux.x86_64.rpm
 
-			rpm -ivh $PWD/xrdp-0.6.1-3.el7.nux.x86_64.rpm
-			rpm -ivh $PWD/xrdp-debuginfo-0.6.1-3.el7.nux.x86_64.rpm
+			sudo rpm -ivh $PWD/xrdp-0.6.1-3.el7.nux.x86_64.rpm
+			sudo rpm -ivh $PWD/xrdp-debuginfo-0.6.1-3.el7.nux.x86_64.rpm
 				
-			rm -f $PWD/xrdp-0.6.1-3.el7.nux.x86_64.rpm
-			rm -f $PWD/xrdp-debuginfo-0.6.1-3.el7.nux.x86_64.rpm
+			sudo rm -f $PWD/xrdp-0.6.1-3.el7.nux.x86_64.rpm
+			sudo rm -f $PWD/xrdp-debuginfo-0.6.1-3.el7.nux.x86_64.rpm
 			
-			systemctl restart xrdp.service
-			systemctl enable xrdp.service
+			sudo systemctl restart xrdp.service
+			sudo systemctl enable xrdp.service
 
-			firewall-cmd --permanent --zone=public --add-port=3389/tcp
-			firewall-cmd --reload
+			sudo firewall-cmd --permanent --zone=public --add-port=3389/tcp
+			sudo firewall-cmd --reload
 
-			chcon --type=bin_t /usr/sbin/xrdp
-			chcon --type=bin_t /usr/sbin/xrdp-sesman
+			sudo chcon --type=bin_t /usr/sbin/xrdp
+			sudo chcon --type=bin_t /usr/sbin/xrdp-sesman
 			
 
 
-			systemctl restart xrdp.service
+			sudo systemctl restart xrdp.service
 
 		else
 			sudo yum -y install vnc4server autocutsel;
@@ -199,8 +195,8 @@ restart_service()
 			echo -e "$P\n$P" | sudo vncserver -geometry 1600x900 -depth 24;
 		fi
 	elif [[ "$OS_ID" == "centos" ]]; then
-		systemctl restart xrdp.service
-		systemctl isolate graphical.target
+		sudo systemctl restart xrdp.service
+		sudo systemctl isolate graphical.target
 	fi
 
 }
