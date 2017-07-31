@@ -67,8 +67,8 @@ machine_info()
 	latlong=$(curl ipinfo.io/loc/$extip);
 	echo "Internal IP: ";
 	ip addr | grep 'state UP' -A2 | tail -n1 | awk '{print $2}' | cut -f1  -d'/';
-	echo "External IP: ";
-	dig +short myip.opendns.com @resolver1.opendns.com;
+	ip=$(curl ipecho.net/plain 2>/dev/null)
+	echo -e "Public IP:\n$ip"
 	echo "Operating System: " $OS $VR;
 	
 	echo "Location : " $city " , " $region " , " $country " . Latitude , Longitude --> " $latlong;
