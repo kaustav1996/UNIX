@@ -76,14 +76,14 @@ machine_info()
 startup_settings()
 {
 		if [[ "$OS_ID" == "centos" ]]; then
-			sudo cp $USER_HOME/.bash_profile $USER_HOME/.bash_profile.bk
+			sudo cp $HOME/.bash_profile $HOME/.bash_profile.bk
 			
 			if [[ "$STARTUP_BROWSER" == "chrome" ]]; then
-				echo "google-chrome https://gmail.com &" >> $USER_HOME/.bash_profile
+				echo "google-chrome https://gmail.com &" >> ~/.bash_profile
 			elif [[ "$STARTUP_BROWSER" == "chromium" ]]; then
-				echo "chromium https://gmail.com &" >> $USER_HOME/.bash_profile
+				echo "chromium https://gmail.com &" >> ~/.bash_profile
 			elif [[ "$STARTUP_BROWSER" == "firefox" ]]; then
-				echo "firefox https://gmail.com &" >> $USER_HOME/.bash_profile
+				echo "firefox https://gmail.com &" >> ~/.bash_profile
 			else
 				echo "ERROR!! BROWSER NOT AVAILABLE!!"
 			fi
@@ -141,9 +141,9 @@ install_desktop()
 			# installing [xfce] desktop environmet
 			# to have a different desktop-environment change this package names and the following session commandd with it.
 			sudo yum -y groupinstall "xfce"
-			sudo a=rwx $USER_HOME/.Xclients
-			sudo echo xfce4-session > $USER_HOME/.Xclients
-			sudo chmod +x $USER_HOME/.Xclients
+			sudo a=rwx $HOME/.Xclients
+			sudo echo xfce4-session > $HOME/.Xclients
+			sudo chmod +x $HOME/.Xclients
 			# --------------
 
 			# starting the graphical envirnment
