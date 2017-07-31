@@ -36,11 +36,17 @@ install_extra_packages()
 		chmod +x /home/chrome.desktop;
 		chmod +x /home/firefox.desktop;
 	elif [[ "$OS_ID" == "centos" ]]; then
-		sudo yum -y install wget chromium firefox browser-plugin-freshplayer-pepperflash firefox bind-utils;
-		wget -P $PWD https://dl.google.com/linux/direct/google-chrome-stable_current_x86_64.rpm
+		sudo yum -y install chromium
+		sudo yum -y install firefox
+		sudo yum -y install xdotool	
+		# google chrome has some issues with centod7 so installing it manually
+		sudo wget -P $PWD https://dl.google.com/linux/direct/google-chrome-stable_current_x86_64.rpm
 		sudo yum -y install $PWD/google-chrome-stable_current_x86_64.rpm
-		rm -f $PWD/google-chrome-stable_current_x86_64.rpm		
-		sudo chmod -R a=rwx /home/;
+		sudo rm -f $PWD/google-chrome-stable_current_x86_64.rpm			
+		
+		# setting google-chrome to automatically be called when a user makes connection using rdp [mstms]
+		# basically adding commands to .bash_profile file which is been executed by the xrdp (startwm.sh)
+		# and also backing up the ~/.bash_profile file . 
 		echo -e "[Desktop Entry]\nName=chrome\nExec=google-chrome --no-sandbox www.gmail.com\nType=Application" >> /home/chrome.desktop
 		echo -e "[Desktop Entry]\nName=chromium\nExec=chromium-browser www.gmail.com\nType=Application" >> /home/chromium.desktop
 		echo -e "[Desktop Entry]\nName=firefox\nExec=firefox www.gmail.com\nType=Application" >> /home/firefox.desktop
@@ -67,32 +73,43 @@ machine_info()
 	
 	echo "Location : " $city " , " $region " , " $country " . Latitude , Longitude --> " $latlong;
 }
-startup_settings()
+browser_exec()
 {
-	browser_exec()
-	{
-		if [[ "$STARTUP_BROWSER" == "chrome" ]]; then
-			echo -e "[Desktop Entry]\nName=Chrome_autostart\nExec=google-chrome --no-sandbox www.gmail.com\nType=Application" >>/etc/xdg/autostart/chrome.desktop; #chrome would start at start up
-			sudo chmod +x /etc/xdg/autostart/chrome.desktop;
-		elif [[ "$STARTUP_BROWSER" == "chromium" ]]; then
-			if [[ "$OS_ID" == "Ubuntu" ]]; then
-				echo -e "[Desktop Entry]\nName=Chromium_autostart\nExec=chromium-browser --no-sandbox www.gmail.com\nType=Application" >>/etc/xdg/autostart/chromium.desktop; #chrome would start at start up
-				sudo chmod +x /etc/xdg/autostart/chromium.desktop;
+		if [[ "$OS_ID" == "centos" ]]; then
+			sudo cp $USER_HOME/.bash_profile $USER_HOME/.bash_profile.bk
+			
+			if [[ "$STARTUP_BROWSER" == "chrome" ]]; then
+				echo "google-chrome https://gmail.com &" >> $USER_HOME/.bash_profile
+			elif [[ "$STARTUP_BROWSER" == "chromium" ]]; then
+				echo "chromium https://gmail.com &" >> $USER_HOME/.bash_profile
+			elif [[ "$STARTUP_BROWSER" == "firefox" ]]; then
+				echo "firefox https://gmail.com &" >> $USER_HOME/.bash_profile
 			else
+				echo "ERROR!! BROWSER NOT AVAILABLE!!"
+			fi
+		elif [[ "$OS_ID" == "Ubuntu" ]]; then
+			if [[ "$STARTUP_BROWSER" == "chrome" ]]; then
+				echo -e "[Desktop Entry]\nName=Chrome_autostart\nExec=google-chrome --no-sandbox www.gmail.com\nType=Application" >>/etc/xdg/autostart/chrome.desktop; #chrome would start at start up
+				sudo chmod +x /etc/xdg/autostart/chrome.desktop;
+			elif [[ "$STARTUP_BROWSER" == "chromium" ]]; then
 				echo -e "[Desktop Entry]\nName=Chromium_autostart\nExec=chromium-browser --no-sandbox www.gmail.com\nType=Application" >>/etc/xdg/autostart/chromium.desktop; #chrome would start at start up
 				sudo chmod +x /etc/xdg/autostart/chromium.desktop;
+			elif [[ "$STARTUP_BROWSER" == "firefox" ]]; then
+				echo -e "[Desktop Entry]\nName=Firefox_autostart\nExec=firefox www.gmail.com\nType=Application" >>/etc/xdg/autostart/fox.desktop; #chrome would start at start up
+				sudo chmod +x /etc/xdg/autostart/fox.desktop;
+			else
+				echo "ERROR!! BROWSER NOT AVAILABLE!!"
 			fi
-		elif [[ "$STARTUP_BROWSER" == "firefox" ]]; then
-			echo -e "[Desktop Entry]\nName=Firefox_autostart\nExec=firefox www.gmail.com\nType=Application" >>/etc/xdg/autostart/fox.desktop; #chrome would start at start up
-			sudo chmod +x /etc/xdg/autostart/fox.desktop;
-		else
-			echo "ERROR!! BROWSER NOT AVAILABLE!!"
+			sudo chmod -R a=rwx /etc/xdg/autostart/ ; #granting permission to edit autostart
+			echo -e "[Desktop Entry]\nName=Terminal_autostart\nExec=xterm\nType=Application" >>/etc/xdg/autostart/term.desktop; #terminal would start at start up
+			sudo chmod +x /etc/xdg/autostart/term.desktop;
 		fi
-	}
+
+	
 	sudo chmod -R a=rwx /etc/xdg/autostart/ ; #granting permission to edit autostart
 	echo -e "[Desktop Entry]\nName=Terminal_autostart\nExec=xterm\nType=Application" >>/etc/xdg/autostart/term.desktop; #terminal would start at start up
 	sudo chmod +x /etc/xdg/autostart/term.desktop;
-	browser_exec
+
 }
 install_desktop()
 {
@@ -119,10 +136,45 @@ install_desktop()
 		fi
 	elif [[ "$OS_ID" == "centos" ]]; then
 		if [[ "$SERVER" == "xrdp" ]]; then
-			sudo rpm -Uvh http://download.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
-			sudo yum -y install xrdp
-			sudo yum -y groupinstall Xfce
-			sudo yum -y install xorg-x11-fonts-Type1 xorg-x11-fonts-misc
+			yum -y install git net-tools
+		
+			yum -y install epel-release
+			yum -y localinstall --nogpgcheck https://download1.rpmfusion.org/free/el/rpmfusion-free-release-7.noarch.rpm https://download1.rpmfusion.org/nonfree/el/rpmfusion-nonfree-release-7.noarch.rpm	
+			
+			yum -y groupinstall "X Window system"
+			
+			# installing [xfce] desktop environmet
+			# to have a different desktop-environment change this package names and the following session commandd with it.
+			yum -y groupinstall "xfce"
+			echo xfce4-session > $USER_HOME/.Xclients
+			chmod +x $USER_HOME/.Xclients
+			# --------------
+
+			# starting the graphical envirnment
+			systemctl set-default graphical.target
+			yum -y install wget tigervnc-server			
+
+			wget -P	$PWD http://li.nux.ro/download/nux/dextop/el7/x86_64/xrdp-0.6.1-3.el7.nux.x86_64.rpm
+			wget -P $PWD http://li.nux.ro/download/nux/dextop/el7/x86_64/xrdp-debuginfo-0.6.1-3.el7.nux.x86_64.rpm
+
+			rpm -ivh $PWD/xrdp-0.6.1-3.el7.nux.x86_64.rpm
+			rpm -ivh $PWD/xrdp-debuginfo-0.6.1-3.el7.nux.x86_64.rpm
+				
+			rm -f $PWD/xrdp-0.6.1-3.el7.nux.x86_64.rpm
+			rm -f $PWD/xrdp-debuginfo-0.6.1-3.el7.nux.x86_64.rpm
+			
+			systemctl restart xrdp.service
+			systemctl enable xrdp.service
+
+			firewall-cmd --permanent --zone=public --add-port=3389/tcp
+			firewall-cmd --reload
+
+			chcon --type=bin_t /usr/sbin/xrdp
+			chcon --type=bin_t /usr/sbin/xrdp-sesman
+			
+
+
+			systemctl restart xrdp.service
 
 		else
 			sudo yum -y install vnc4server autocutsel;
@@ -138,13 +190,19 @@ install_desktop()
 		
 }
 restart_service()
-{
+{	
+	if [[ "$OS_ID" == "Ubuntu" ]]; then
 		if [[ "$SERVER" == "xrdp" ]]; then
 			sudo service xrdp restart;
 		else
 			sudo vncserver -kill :1;
 			echo -e "$P\n$P" | sudo vncserver -geometry 1600x900 -depth 24;
 		fi
+	elif [[ "$OS_ID" == "centos" ]]; then
+		systemctl restart xrdp.service
+		systemctl isolate graphical.target
+	fi
+
 }
 echo "###################################################################"
 read -p "Enter Username(type-> root , if u want to enter desktop as root) >> " U
