@@ -141,7 +141,6 @@ install_desktop()
 			# installing [xfce] desktop environmet
 			# to have a different desktop-environment change this package names and the following session commandd with it.
 			sudo yum -y groupinstall "xfce"
-			sudo chmod a=rwx $HOME/.Xclients
 			sudo echo xfce4-session > $HOME/.Xclients
 			sudo chmod +x $HOME/.Xclients
 			# --------------
