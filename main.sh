@@ -218,7 +218,6 @@ install_desktop()
 		sudo systemctl enable xrdp
 		sudo apt -y install xfce4
 		sudo apt -y install xfce4-goodies
-		sudo apt-get -y install xrdp xfce4 xfce4-goodies;
 		echo xfce4-session >~/.xsession;
 		sudo sed -i.bak '/fi/a #edit \n startxfce4 \n' /etc/xrdp/startwm.sh;
 
