@@ -42,13 +42,27 @@ install_extra_packages()
 		# google chrome has some issues with centod7 so installing it manually
 		sudo wget -P $PWD https://dl.google.com/linux/direct/google-chrome-stable_current_x86_64.rpm
 		sudo yum -y install $PWD/google-chrome-stable_current_x86_64.rpm
-		sudo rm -f $PWD/google-chrome-stable_current_x86_64.rpm			
+		sudo rm -f $PWD/google-chrome-stable_current_x86_64.rpm		
 		
 		# setting google-chrome to automatically be called when a user makes connection using rdp [mstms]
 		# basically adding commands to .bash_profile file which is been executed by the xrdp (startwm.sh)
 		# and also backing up the ~/.bash_profile file . 
 		echo -e "[Desktop Entry]\nName=chrome\nExec=google-chrome --no-sandbox www.gmail.com\nType=Application" >> /home/chrome.desktop
 		echo -e "[Desktop Entry]\nName=chromium\nExec=chromium-browser www.gmail.com\nType=Application" >> /home/chromium.desktop
+		echo -e "[Desktop Entry]\nName=firefox\nExec=firefox www.gmail.com\nType=Application" >> /home/firefox.desktop
+		chmod +x /home/chromium.desktop;
+		chmod +x /home/chrome.desktop;
+		chmod +x /home/firefox.desktop;
+	elif [[ "$OS_ID" == "debian" ]]; then
+		sudo apt -y install chromium
+		sudo apt -y install firefox-esr
+		wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -O /tmp/google-chrome-stable_current_amd64.deb;
+		sudo dpkg -i /tmp/google-chrome-stable_current_amd64.deb;sudo apt-get -y install -f; #installing chrome
+		rm /tmp/google-chrome-stable_current_amd64.deb;
+		sudo chmod a=rwx /etc/chromium-browser/default;
+		sudo chmod -R a=rwx /home/;
+		echo -e "[Desktop Entry]\nName=chrome\nExec=google-chrome --no-sandbox www.gmail.com\nType=Application" >> /home/chrome.desktop
+		echo -e "[Desktop Entry]\nName=chromium\nExec=chromium www.gmail.com\nType=Application" >> /home/chromium.desktop
 		echo -e "[Desktop Entry]\nName=firefox\nExec=firefox www.gmail.com\nType=Application" >> /home/firefox.desktop
 		chmod +x /home/chromium.desktop;
 		chmod +x /home/chrome.desktop;
@@ -60,7 +74,7 @@ install_extra_packages()
 machine_info()
 {
 	
-	alias extip='dig +short myip.opendns.com @resolver1.opendns.com';
+	alias extip=$(curl ipecho.net/plain 2>/dev/null);
 	city=$(curl ipinfo.io/city/$extip);
 	region=$(curl ipinfo.io/region/$extip);
 	country=$(curl ipinfo.io/country/$extip);
@@ -68,7 +82,7 @@ machine_info()
 	echo "Internal IP: ";
 	ip addr | grep 'state UP' -A2 | tail -n1 | awk '{print $2}' | cut -f1  -d'/';
 	ip=$(curl ipecho.net/plain 2>/dev/null)
-	echo -e "Public IP:\n$ip"
+	echo -e "External IP:\n$ip"
 	echo "Operating System: " $OS $VR;
 	
 	echo "Location : " $city " , " $region " , " $country " . Latitude , Longitude --> " $latlong;
@@ -88,6 +102,7 @@ startup_settings()
 				echo "ERROR!! BROWSER NOT AVAILABLE!!"
 			fi
 		elif [[ "$OS_ID" == "Ubuntu" ]]; then
+			sudo chmod -R a=rwx /etc/xdg/autostart/ ; #granting permission to edit autostart
 			if [[ "$STARTUP_BROWSER" == "chrome" ]]; then
 				echo -e "[Desktop Entry]\nName=Chrome_autostart\nExec=google-chrome --no-sandbox www.gmail.com\nType=Application" >>/etc/xdg/autostart/chrome.desktop; #chrome would start at start up
 				sudo chmod +x /etc/xdg/autostart/chrome.desktop;
@@ -100,7 +115,24 @@ startup_settings()
 			else
 				echo "ERROR!! BROWSER NOT AVAILABLE!!"
 			fi
+			
+			echo -e "[Desktop Entry]\nName=Terminal_autostart\nExec=xterm\nType=Application" >>/etc/xdg/autostart/term.desktop; #terminal would start at start up
+			sudo chmod +x /etc/xdg/autostart/term.desktop;
+		elif [[ "$OS_ID" == "debian" ]]; then
 			sudo chmod -R a=rwx /etc/xdg/autostart/ ; #granting permission to edit autostart
+			if [[ "$STARTUP_BROWSER" == "chrome" ]]; then
+				echo -e "[Desktop Entry]\nName=Chrome_autostart\nExec=google-chrome --no-sandbox www.gmail.com\nType=Application" >>/etc/xdg/autostart/chrome.desktop; #chrome would start at start up
+				sudo chmod +x /etc/xdg/autostart/chrome.desktop;
+			elif [[ "$STARTUP_BROWSER" == "chromium" ]]; then
+				echo -e "[Desktop Entry]\nName=Chromium_autostart\nExec=chromium --no-sandbox www.gmail.com\nType=Application" >>/etc/xdg/autostart/chromium.desktop; #chrome would start at start up
+				sudo chmod +x /etc/xdg/autostart/chromium.desktop;
+			elif [[ "$STARTUP_BROWSER" == "firefox" ]]; then
+				echo -e "[Desktop Entry]\nName=Firefox_autostart\nExec=firefox www.gmail.com\nType=Application" >>/etc/xdg/autostart/fox.desktop; #chrome would start at start up
+				sudo chmod +x /etc/xdg/autostart/fox.desktop;
+			else
+				echo "Browser not supported!!"
+			fi
+			
 			echo -e "[Desktop Entry]\nName=Terminal_autostart\nExec=xterm\nType=Application" >>/etc/xdg/autostart/term.desktop; #terminal would start at start up
 			sudo chmod +x /etc/xdg/autostart/term.desktop;
 		fi
@@ -179,6 +211,17 @@ install_desktop()
 			sudo vncserver -kill :1;
 			sudo vncserver -geometry 1600x900 -depth 24;
 		fi
+	elif [[ "$OS_ID" == "debian" ]]; then
+		sudo apt-get update
+		sudo apt -y install xrdp
+		sudo systemctl start xrdp
+		sudo systemctl enable xrdp
+		sudo apt -y install xfce4
+		sudo apt -y install xfce4-goodies
+		sudo apt-get -y install xrdp xfce4 xfce4-goodies;
+		echo xfce4-session >~/.xsession;
+		sudo sed -i.bak '/fi/a #edit \n startxfce4 \n' /etc/xrdp/startwm.sh;
+
 	else
 		echo "ERROR OS NOT SUPPORTED YET!!"
 	fi
@@ -203,6 +246,7 @@ echo "###################################################################"
 read -p "Enter Username(type-> root , if u want to enter desktop as root) >> " U
 read -p "Enter Password(use atleast 8 characters/numbers) >> " P #as this password will be also used for vncserver if chosen
 echo -e "$P\n$P" | sudo passwd $U
+root -i
 detect_os
 read -p "What server do you want to install? (xrdp/vnc) >> " SERVER
 read -p "Which Browser do you want to open after login ? (chrome/chromium/firefox) >> " STARTUP_BROWSER
