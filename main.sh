@@ -248,7 +248,6 @@ echo "###################################################################"
 read -p "Enter Username(type-> root , if u want to enter desktop as root) >> " U
 read -p "Enter Password(use atleast 8 characters/numbers) >> " P #as this password will be also used for vncserver if chosen
 echo -e "$P\n$P" | sudo passwd $U
-sudo -i
 detect_os
 read -p "What server do you want to install? (xrdp/vnc) >> " SERVER
 read -p "Which Browser do you want to open after login ? (chrome/chromium/firefox) >> " STARTUP_BROWSER
