@@ -239,6 +239,8 @@ restart_service()
 	elif [[ "$OS_ID" == "centos" ]]; then
 		sudo systemctl restart xrdp.service
 		sudo systemctl isolate graphical.target
+	elif [[ "$OS_ID" == "debian" ]]; then
+		sudo service xrdp restart;
 	fi
 
 }
