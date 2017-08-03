@@ -1,4 +1,11 @@
 [debian 9]
 xrdp not running as port already in use
-[centos 6 , centos 7]
+
+[centos 6 , centos 7 ,rhel 6 ,open suse 11]
 xrdp running. problem connecting
+another xserver already running on display 10
+
+
+[container linux CoreOs and Container optimized os]
+
+not suitable for installing desktop
