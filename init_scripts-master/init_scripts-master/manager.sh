@@ -27,7 +27,7 @@ Description :
 	-browser		: setup which browser to be auto run on login.
 "
 # URL to the files which needs to be downloaded or checked for updates.
-URL=https://raw.githubusercontent.com/a5hish/init_scripts/master
+URL=https://raw.githubusercontent.com/kaustav1996/UNIX/master/init_scripts-master/init_scripts-master/
 # Path to the current working directory of the script.
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
