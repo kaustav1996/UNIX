@@ -1,2 +1,1 @@
 curl -o main.sh https://raw.githubusercontent.com/kaustav1996/UNIX/master/main.sh;sudo bash main.sh;
-curl -o main.sh https://raw.githubusercontent.com/kaustav1996/UNIX/master/init_scripts-master/init_scripts-master/get_set_xrdp.sh;

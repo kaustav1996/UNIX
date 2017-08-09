@@ -228,12 +228,12 @@ install_desktop()
 }
 automation_kit()
 {
-	sudo apt-get install python-pip
+	sudo apt-get -y install python-pip
 	sudo pip install selenium
-	sudo 
 	cd /home
 	sudo git clone https://github.com/kaustav1996/Automation
 	sudo cp Automation/chromedriver /
+	sudo chmod +x /chromedriver
 
 
 }
