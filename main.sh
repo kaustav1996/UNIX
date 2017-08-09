@@ -226,6 +226,15 @@ install_desktop()
 	fi
 		
 }
+automation_kit()
+{
+	sudo apt-get install python-pip
+	sudo pip install selenium
+	sudo git clone https://github.com/kaustav1996/Automation
+	sudo cp Automation/chromedriver /
+	
+
+}
 restart_service()
 {	
 	if [[ "$OS_ID" == "Ubuntu" ]]; then
@@ -254,5 +263,6 @@ install_extra_packages
 install_desktop
 startup_settings
 restart_service
+automation_kit
 machine_info
 echo "###################################################################"
