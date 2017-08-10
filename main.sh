@@ -218,6 +218,7 @@ install_desktop()
 		sudo systemctl enable xrdp
 		sudo apt -y install xfce4
 		sudo apt -y install xfce4-goodies
+		sudo apt-get -f install
 		echo xfce4-session >~/.xsession;
 		sudo sed -i.bak '/fi/a #edit \n startxfce4 \n' /etc/xrdp/startwm.sh;
 
@@ -228,9 +229,10 @@ install_desktop()
 }
 automation_kit()
 {
-	sudo apt-get -y install python-pip
+	sudo apt -y install python-pip
 	sudo pip install selenium
 	cd /home
+	sudo apt-get -f install
 	sudo git clone https://github.com/kaustav1996/Automation
 	sudo cp Automation/chromedriver /
 	sudo chmod +x /chromedriver
