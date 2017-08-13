@@ -62,7 +62,7 @@ try:
 	browser.find_element_by_class_name('video-player-module').click()
 	browser.execute_script("var elems = document.getElementsByClassName('playback-speed-popover popover dark');for(var i= 0;i<elems.length;i++){elems[i].click();}")
 	
-except selenium.common.exceptions.WebDriverException:
+except WebDriverException:
 	time.sleep(30)
 	y=random.randint(1,4)
 	a=list()
