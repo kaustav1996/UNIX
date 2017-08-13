@@ -126,7 +126,7 @@ try:
 	a=list()
 	i=0
 	while(i<3):
-		x=random.randint(0,no)
+		x=random.randint(0,no-1)
 		if(x not in a):
 			a.append(x)
 			browser.execute_script("var elems = document.getElementsByClassName('select-box');elems["+str(x)+"].click();")
