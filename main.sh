@@ -229,7 +229,7 @@ install_desktop()
 }
 automation_kit()
 {
-	sudo apt -y install python-pip
+	sudo apt -y install python-pip git
 	sudo pip install selenium
 	cd /home
 	sudo apt-get -f install
