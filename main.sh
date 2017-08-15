@@ -120,6 +120,7 @@ startup_settings()
 				echo -e "[Desktop Entry]\nName=Terminal_autostart\nExec=xterm\nType=Application" >>/etc/xdg/autostart/term.desktop; #terminal would start at start up
 			else
 				echo -e "[Desktop Entry]\nName=Terminal_autostart\nExec=lxterminal\nType=Application" >>/etc/xdg/autostart/term.desktop; #terminal would start at start up
+			fi
 			sudo chmod +x /etc/xdg/autostart/term.desktop;
 		elif [[ "$OS_ID" == "debian" ]]; then
 			sudo chmod -R a=rwx /etc/xdg/autostart/ ; #granting permission to edit autostart
