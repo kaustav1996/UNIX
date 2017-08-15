@@ -86,7 +86,7 @@ startup_settings()
 			else
 				echo "ERROR!! BROWSER NOT AVAILABLE!!"
 			fi
-			if [[ "$4" == "1" ]]; then
+			if [[ "$5" == "1" ]]; then
 				echo -e "[Desktop Entry]\nName=Terminal_autostart\nExec=xterm\nType=Application" >>/etc/xdg/autostart/term.desktop; #terminal would start at start up
 			else
 				echo -e "[Desktop Entry]\nName=Terminal_autostart\nExec=lxterminal\nType=Application" >>/etc/xdg/autostart/term.desktop; #terminal would start at start up
