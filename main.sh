@@ -278,16 +278,16 @@ if [[ "$3" == "1" ]]; then
 else
 	U="vnc"
 fi
-if [[ "$3" == "1" ]]; then
+if [[ "$4" == "1" ]]; then
 	STARTUP_BROWSER='chrome'
 else
-	if [[ "$3" == "2" ]]; then
+	if [[ "$4" == "2" ]]; then
 		STARTUP_BROWSER='firefox'
 	else
 		STARTUP_BROWSER='chromium'
 	fi
 fi
-if [[ "$4" == "1" ]]; then
+if [[ "$5" == "1" ]]; then
 	install_extra_packages
 	install_desktop
 	startup_settings
@@ -323,7 +323,7 @@ fi
 #################################################################################################################################################################################
 #############################################################################################################################################################################
 #
-#  sudo bash main.sh [1 for root / username] [1 for password akshay@123 / password ] [1 = xrdp / 2 = vnc] [ 1 for GCP / 2 for my.vultr]
+#  sudo bash main.sh [1 for root / username] [1 for password akshay@123 / password ] [1 = xrdp / 2 = vnc] [1 for chrome/2 for firefox/ 3 for chromium] [ 1 for GCP / 2 for my.vultr]
 #
 #  ***********************************************************************************************************************************************************************
 #
