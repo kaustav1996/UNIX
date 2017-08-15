@@ -258,16 +258,70 @@ restart_service()
 
 }
 echo "###################################################################"
-read -p "Enter Username(type-> root , if u want to enter desktop as root) >> " U
-read -p "Enter Password(use atleast 8 characters/numbers) >> " P #as this password will be also used for vncserver if chosen
+if [[ "$1" == "1"]]; then
+	U='root'
+else
+	U="$1"
+fi
+if [[ "$2" == "1"]]; then
+	P='akshay@123'  #as this password will be also used for vncserver if chosen
+else
+	P="$2"
+fi
 echo -e "$P\n$P" | sudo passwd $U
 detect_os
-read -p "What server do you want to install? (xrdp/vnc) >> " SERVER
-read -p "Which Browser do you want to open after login ? (chrome/chromium/firefox) >> " STARTUP_BROWSER
-install_extra_packages
-install_desktop
-startup_settings
-restart_service
-automation_kit
-machine_info
-echo "###################################################################"
+if [[ "$3" == "1"]]; then
+	SERVER='xrdp'
+else
+	U="vnc"
+fi
+if [[ "$3" == "1"]]; then
+	STARTUP_BROWSER='chrome'
+else
+	if [[ "$3" == "2"]]; then
+		STARTUP_BROWSER='firefox'
+	else
+		STARTUP_BROWSER='chromium'
+	fi
+fi
+if [[ "$4" == "1"]]; then
+	install_extra_packages
+	install_desktop
+	startup_settings
+	restart_service
+	automation_kit
+	machine_info
+	echo "###################################################################"
+else
+	sudo apt-get update;
+	sudo apt-get -y install lxde ubuntu-gnome-desktop tightvncserver xrdp chromium-browser firefox browser-plugin-freshplayer-pepperflash; # installing desktop and browsers and plugins
+	wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -O /tmp/google-chrome-stable_current_amd64.deb;
+	sudo dpkg -i /tmp/google-chrome-stable_current_amd64.deb;sudo apt-get -y install -f; #installing chrome
+	rm /tmp/google-chrome-stable_current_amd64.deb;
+	sudo chmod a=rwx /etc/chromium-browser/default;
+	sudo chmod -R a=rwx /home/;
+	echo "CHROMIUM_FLAGS=\" --user-data-dir --no-sandbox\"" >  /etc/chromium-browser/default ;
+	echo -e "[Desktop Entry]\nName=chrome\nExec=google-chrome --no-sandbox www.gmail.com\nType=Application" >> /home/chrome.desktop
+	echo -e "[Desktop Entry]\nName=chromium\nExec=chromium-browser www.gmail.com\nType=Application" >> /home/chromium.desktop
+	echo -e "[Desktop Entry]\nName=firefox\nExec=firefox www.gmail.com\nType=Application" >> /home/firefox.desktop
+	chmod +x /home/chromium.desktop;
+	chmod +x /home/chrome.desktop;
+	chmod +x /home/firefox.desktop;
+	echo lxsession -s LXDE -e LXDE > ~/.xsession ;
+	automation_kit # selenium dependencies and git repository download
+	startup_settings
+	echo  sudo /etc/init.d/xrdp restart ; #restart
+	machine_info
+fi
+#################################################################################################################################################################################
+#############################################################################################################################################################################
+#
+#  sudo main.sh [1 for root / username] [1 for password akshay@123 / password ] [1 = xrdp / 2 = vnc] [ 1 for GCP / 2 for my.vultr]
+#
+#  ***********************************************************************************************************************************************************************
+#
+#  -----------------------------------------------------------------------KAUSTAV-----------BANERJEE---------[KGEC]---------------------------------------------------
+#
+#  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+#
+#  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
