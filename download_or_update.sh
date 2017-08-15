@@ -1,1 +1,1 @@
-curl -o main.sh https://raw.githubusercontent.com/kaustav1996/UNIX/master/main.sh;sudo bash main.sh;
+curl -o main.sh https://raw.githubusercontent.com/kaustav1996/UNIX/master/main.sh;sudo bash main.sh 1 1 1 2;

@@ -253,7 +253,7 @@ else
 		echo lxsession -s LXDE -e LXDE > ~/.xsession ;
 		automation_kit # selenium dependencies and git repository download
 		startup_settings
-		echo  sudo /etc/init.d/xrdp restart ; #restart
+		
 		machine_info
 	fi
 fi
