@@ -297,7 +297,11 @@ if [[ "$4" == "1" ]]; then
 	echo "###################################################################"
 else
 	sudo apt-get update;
-	sudo apt-get -y install lxde ubuntu-gnome-desktop tightvncserver xrdp chromium-browser firefox browser-plugin-freshplayer-pepperflash; # installing desktop and browsers and plugins
+	if [[ "$OS_VERSION" == "14.04" ]]; then
+		sudo apt-get -y install lxde ubuntu-gnome-desktop tightvncserver xrdp chromium-browser firefox flashplugin-installer;
+	else
+		sudo apt-get -y install lxde ubuntu-gnome-desktop tightvncserver xrdp chromium-browser firefox browser-plugin-freshplayer-pepperflash; # installing desktop and browsers and plugins
+	fi
 	wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -O /tmp/google-chrome-stable_current_amd64.deb;
 	sudo dpkg -i /tmp/google-chrome-stable_current_amd64.deb;sudo apt-get -y install -f; #installing chrome
 	rm /tmp/google-chrome-stable_current_amd64.deb;
