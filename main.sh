@@ -258,33 +258,33 @@ restart_service()
 
 }
 echo "###################################################################"
-if [[ "$1" == "1"]]; then
+if [[ "$1" == "1" ]]; then
 	U='root'
 else
 	U="$1"
 fi
-if [[ "$2" == "1"]]; then
+if [[ "$2" == "1" ]]; then
 	P='akshay@123'  #as this password will be also used for vncserver if chosen
 else
 	P="$2"
 fi
 echo -e "$P\n$P" | sudo passwd $U
 detect_os
-if [[ "$3" == "1"]]; then
+if [[ "$3" == "1" ]]; then
 	SERVER='xrdp'
 else
 	U="vnc"
 fi
-if [[ "$3" == "1"]]; then
+if [[ "$3" == "1" ]]; then
 	STARTUP_BROWSER='chrome'
 else
-	if [[ "$3" == "2"]]; then
+	if [[ "$3" == "2" ]]; then
 		STARTUP_BROWSER='firefox'
 	else
 		STARTUP_BROWSER='chromium'
 	fi
 fi
-if [[ "$4" == "1"]]; then
+if [[ "$4" == "1" ]]; then
 	install_extra_packages
 	install_desktop
 	startup_settings
